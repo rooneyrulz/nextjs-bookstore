@@ -8,6 +8,7 @@ import FormSubmitButton from "./FormSubmitButton";
 import { ProductSchema, TProductSchema } from "@/lib/validation/product";
 import ErrorMessage from "./ErrorMessage";
 import { addProduct, updateProduct } from "@/app/products/new/actions";
+import { useRouter } from "next/navigation";
 
 interface ProductFormProps {
     productToUpdate?: Product
@@ -26,14 +27,16 @@ export default async function ProductForm({ productToUpdate }: ProductFormProps)
     }
   });
   const [error, setError] = React.useState("");
-
+  const router = useRouter();
 
   const onHandleSubmit = async (data: TProductSchema) => {
     try {
       if(productToUpdate) {
-        await updateProduct(data, productToUpdate.id)
+        await updateProduct(data, productToUpdate.id);
+        router.push(`/products/${productToUpdate.id}`);
       } else {
         await addProduct(data);
+        router.push('/');
       }
     } catch (error) {
       setError("Oops! Something went wrong.");
