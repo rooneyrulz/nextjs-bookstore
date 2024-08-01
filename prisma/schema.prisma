@@ -13,7 +13,7 @@ model Product {
   imageUrl    String
   name        String
   price       Int
-  category    String     @default("common")
+  category    String     @default("Common")
   owner       String     @default("John")
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt

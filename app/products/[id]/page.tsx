@@ -58,7 +58,7 @@ export default async function ProductPage({
         <PriceTag price={product.price} className="mt-4" />
         <p className="py-6">{product.description}</p>
         {session?.user?.role === "admin" ? (
-          <UpdateProductButton />
+          <UpdateProductButton productId={product.id} />
         ) : (
           <AddToCartButton
             productId={product.id}

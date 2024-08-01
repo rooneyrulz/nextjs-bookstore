@@ -12,7 +12,7 @@ export default function AddToCartButton() {
         router.push("/products/new");
       }}
     >
-      New Product
+      New Book
     </button>
   );
 }
