@@ -8,35 +8,31 @@ import FormSubmitButton from "./FormSubmitButton";
 import { ProductSchema, TProductSchema } from "@/lib/validation/product";
 import ErrorMessage from "./ErrorMessage";
 import { addProduct, updateProduct } from "@/app/products/new/actions";
-import { useRouter } from "next/navigation";
 
 interface ProductFormProps {
     productToUpdate?: Product
 }
 
-export default async function ProductForm({ productToUpdate }: ProductFormProps) {
-  const { register, handleSubmit, formState: { errors } } = useForm<TProductSchema>({
+export default function ProductForm({ productToUpdate }: ProductFormProps) {
+  const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<TProductSchema>({
     resolver: zodResolver(ProductSchema),
     defaultValues: {
       name: productToUpdate?.name || "",
       description: productToUpdate?.description || "",
       category: productToUpdate?.category || "",
-      price: productToUpdate?.price || 0,
+      price: productToUpdate?.price || NaN,
       owner: productToUpdate?.owner || "",
       imageUrl: productToUpdate?.imageUrl || "",
     }
   });
   const [error, setError] = React.useState("");
-  const router = useRouter();
 
   const onHandleSubmit = async (data: TProductSchema) => {
     try {
       if(productToUpdate) {
         await updateProduct(data, productToUpdate.id);
-        router.push(`/products/${productToUpdate.id}`);
       } else {
         await addProduct(data);
-        router.push('/');
       }
     } catch (error) {
       setError("Oops! Something went wrong.");
@@ -80,10 +76,9 @@ export default async function ProductForm({ productToUpdate }: ProductFormProps)
         <ErrorMessage>{errors.description?.message}</ErrorMessage>
         <input
           {...register("price", {
-            valueAsNumber: true,
-            validate: (value) => value > 0,
+            valueAsNumber: true
           })}
-          placeholder="Price: will be converted to cents. Ex: 100USD / 100"
+          placeholder="Price should greater than 50USD for testing stripe checkout, it will be converted to cents. Ex: 100USD / 100"
           type="number"
           className="input input-bordered mb-3 w-full"
         />
@@ -101,7 +96,7 @@ export default async function ProductForm({ productToUpdate }: ProductFormProps)
           className="input input-bordered mb-3 w-full"
         />
         <ErrorMessage>{errors.imageUrl?.message}</ErrorMessage>
-        <FormSubmitButton className="btn-primary btn-block">
+        <FormSubmitButton className="btn-primary btn-block" isLoading={isSubmitting}>
           {productToUpdate ? "Update Book" : "Publish Book"}
         </FormSubmitButton>
       </form>

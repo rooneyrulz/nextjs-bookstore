@@ -45,7 +45,8 @@ const Checkout = ({ amount }: { amount: number }) => {
     const { error } = await stripe.confirmPayment({
       elements,
       clientSecret,
-      confirmParams: {
+      confirmParams: { 
+        // Production URL: https://nextjs-bookstore-hazel.vercel.app
         return_url: `https://nextjs-bookstore-hazel.vercel.app/payment/success?amount=${amount}`,
       },
     });

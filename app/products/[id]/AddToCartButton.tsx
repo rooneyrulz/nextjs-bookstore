@@ -14,6 +14,9 @@ export default function AddToCartButton({
   const [isPending, startTransition] = useTransition();
   const [success, setSuccess] = useState(false);
 
+  console.log("isPending", isPending);
+  console.log("success", success);
+
   return (
     <div className="flex items-center gap-2">
       <button
