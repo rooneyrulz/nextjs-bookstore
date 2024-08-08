@@ -40,7 +40,8 @@ export default async function CartPage() {
           Total: {formatPrice(cart?.subtotal || 0)}
         </p>
         <form action={redirectToCheckout}>
-          <button 
+          <button
+            disabled={!cart?.items.length}
             type="submit"
             className="btn-primary btn sm:w-[200px]">Checkout</button>
         </form>

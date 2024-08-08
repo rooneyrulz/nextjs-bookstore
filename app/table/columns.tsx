@@ -1,6 +1,8 @@
 import { type MRT_ColumnDef} from 'mantine-react-table';
 import PriceTag from '@/components/PriceTag';
 import { Product } from '@prisma/client';
+import { formatDate } from '@/lib/format';
+import ProductBadge from '@/components/ProductBadge';
 
 export const columns: MRT_ColumnDef<Product>[] = [
   {
@@ -8,8 +10,7 @@ export const columns: MRT_ColumnDef<Product>[] = [
     header: 'Title',
     size: 200,
     Cell: ({ cell, row }) => {
-      const isNew = Date.now() - new Date(row.original.createdAt).getTime() < 1000 * 60 * 60 * 24 * 7;
-      return (<span>{cell.getValue<string>()} {isNew && <div className="badge badge-secondary">NEW</div>}</span>)
+      return <ProductBadge productName={cell.getValue<string>()} publishedAt={row.original.createdAt} />
     },
   },
   {
@@ -55,11 +56,7 @@ export const columns: MRT_ColumnDef<Product>[] = [
       align: 'center',
     },
     Cell: ({ cell }) => {
-      const date = new Date(cell.getValue<string>()).toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric'
-      });
+      const date = formatDate(cell.getValue<string>());
       return (<span>{date}</span>);
     },
   },

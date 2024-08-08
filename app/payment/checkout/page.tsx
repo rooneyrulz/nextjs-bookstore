@@ -1,7 +1,7 @@
 import { getCart } from "@/lib/db/cart";
 import PaymentInitializer from "./initializer";
 import { getServerSession } from "next-auth";
-import { options } from "prettier-plugin-tailwindcss";
+import { options } from "@/app/api/auth/[...nextauth]/options";
 import { redirect } from "next/navigation";
 
 export default async function PaymentCheckout() {
@@ -13,7 +13,7 @@ export default async function PaymentCheckout() {
     if (!session?.user) {
         redirect('/api/auth/signin');
     }
-    
+
     return (
         <PaymentInitializer amount={subtotal}/>
     );

@@ -18,9 +18,6 @@ export default function FormSubmitButton({
 }: Props) {
   const { pending } = useFormStatus();
 
-  console.log("pending", pending);
-  console.log("isLoading", isLoading);
-
   return (
     <button
       {...props}

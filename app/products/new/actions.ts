@@ -6,16 +6,16 @@ import { redirect } from "next/navigation";
 
 export async function addProduct(data: TProductSchema) {
     const validation = ProductSchema.safeParse(data);
-  
+
     if(!validation.success) {
       console.log(validation.error.errors);
       throw Error("All fields are required");
     }
-  
+
     await prisma.product.create({
       data: validation.data,
     });
-  
+
     redirect("/");
   }
 
@@ -26,13 +26,13 @@ export async function addProduct(data: TProductSchema) {
       console.log(validation.error.errors);
       throw Error("All fields are required");
     }
-  
+
     await prisma.product.update({
       where: {
         id,
       },
       data: validation.data,
     })
-  
+
     redirect(`/products/${id}`);
   }
