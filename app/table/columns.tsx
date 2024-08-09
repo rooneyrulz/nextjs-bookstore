@@ -3,8 +3,28 @@ import PriceTag from '@/components/PriceTag';
 import { Product } from '@prisma/client';
 import { formatDate } from '@/lib/format';
 import ProductBadge from '@/components/ProductBadge';
+import Image from "next/image";
 
 export const columns: MRT_ColumnDef<Product>[] = [
+    {
+        accessorKey: 'imageUrl',
+        header: 'Image',
+        enableColumnFilter: false,
+        enableSorting: false,
+        enableGlobalFilter: false,
+        Cell: ({ cell, row }) => {
+          return (
+            <Image
+                src={row.original.imageUrl}
+                alt={row.original.name}
+                width={150}
+                height={100}
+                className="rounded-lg"
+                priority
+            />
+          )
+        },
+    },
   {
     accessorKey: 'name',
     header: 'Title',
