@@ -2,8 +2,8 @@ import React from 'react';
 import dynamic from 'next/dynamic';
 import { prisma } from "@/lib/db/prisma";
 import ProductInitializer from "./product-initializer";
-import { Loader } from './table/table-container';
 import { Metadata } from 'next/types';
+import Loader from '@/components/Loader';
 
 const TableContainer = dynamic(() => import('./table/table-container'), {
   ssr: false,

@@ -8,6 +8,8 @@ import FormSubmitButton from "./FormSubmitButton";
 import { ProductSchema, TProductSchema } from "@/lib/validation/product";
 import ErrorMessage from "./ErrorMessage";
 import { addProduct, updateProduct } from "@/app/products/new/actions";
+import { toast } from "react-toastify";
+import AlertMessage from "./AlertMessage";
 
 interface ProductFormProps {
     productToUpdate?: Product
@@ -30,9 +32,11 @@ export default function ProductForm({ productToUpdate }: ProductFormProps) {
   const onHandleSubmit = async (data: TProductSchema) => {
     try {
       if(productToUpdate) {
-        await updateProduct(data, productToUpdate.id);
-      } else {
-        await addProduct(data);
+          await updateProduct(data, productToUpdate.id);
+          toast.success("Book updated successfully!");
+        } else {
+            await addProduct(data);
+            toast.success("Book published successfully!");
       }
     } catch (error) {
       setError("Oops! Something went wrong.");
@@ -40,22 +44,9 @@ export default function ProductForm({ productToUpdate }: ProductFormProps) {
   }
 
   return (
-    <div>
-      {error && <div role="alert" className="alert alert-error my-3 bg-red-500">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          className="h-6 w-6 shrink-0 stroke-current"
-          fill="none"
-          viewBox="0 0 24 24">
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="2"
-            d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
-        </svg>
-        <span>Error! Task failed successfully.</span>
-      </div>}
-      <form onSubmit={handleSubmit(fields => onHandleSubmit(fields))}>
+    <>
+      <AlertMessage alertType="error">{error}</AlertMessage>
+      <form noValidate onSubmit={handleSubmit(fields => onHandleSubmit(fields))}>
         <input
           {...register("name")}
           placeholder="Title"
@@ -78,11 +69,14 @@ export default function ProductForm({ productToUpdate }: ProductFormProps) {
           {...register("price", {
             valueAsNumber: true
           })}
-          placeholder="Price should greater than 50USD for testing stripe checkout, it will be converted to cents. Ex: 100USD / 100"
+          placeholder="Price will be converted to cents. Ex: 100USD / 100"
           type="number"
           className="input input-bordered mb-3 w-full"
         />
         <ErrorMessage>{errors.price?.message}</ErrorMessage>
+        <AlertMessage alertType="info">
+            Price should be above 50 for testing stripe payment, Stripe does not take below 0.5 cents!
+        </AlertMessage>
         <input
           {...register("owner")}
           placeholder="Author"
@@ -96,10 +90,13 @@ export default function ProductForm({ productToUpdate }: ProductFormProps) {
           className="input input-bordered mb-3 w-full"
         />
         <ErrorMessage>{errors.imageUrl?.message}</ErrorMessage>
+        <AlertMessage alertType="info">
+            Image URL from unsplash.com will only be allowed!
+        </AlertMessage>
         <FormSubmitButton className="btn-primary btn-block" isLoading={isSubmitting}>
           {productToUpdate ? "Update Book" : "Publish Book"}
         </FormSubmitButton>
       </form>
-    </div>
+    </>
   );
 }

@@ -1,18 +1,22 @@
-"use client";
-
-import { useRouter } from "next/navigation";
+import { redirect } from "next/navigation";
 
 type UpdateProductButtonProps = {
   productId: string;
 }
 
 export default function UpdateProductButton({ productId}: UpdateProductButtonProps) {
-  const router = useRouter();
+  async function redirectToUpdateProductPage() {
+    "use server";
+    redirect(`/products/new/${productId}`);
+  }
+
   return (
     <div className="flex items-center gap-2">
-      <button className="btn btn-primary" onClick={() => router.push(`/products/new/${productId}`)}>
-        Update Book
-      </button>
+        <form action={redirectToUpdateProductPage}>
+            <button type="submit" className="btn btn-primary">
+                Update Book
+            </button>
+        </form>
     </div>
   );
 }

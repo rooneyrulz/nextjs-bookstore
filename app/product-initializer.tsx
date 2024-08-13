@@ -14,7 +14,7 @@ export default function ProductInitializer({ products, children }: Props) {
 
     React.useEffect(() => {
         add(products);
-    }, []);
+    }, [add, products]);
 
     return (
         <>

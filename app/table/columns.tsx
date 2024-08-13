@@ -1,15 +1,36 @@
 import { type MRT_ColumnDef} from 'mantine-react-table';
 import PriceTag from '@/components/PriceTag';
 import { Product } from '@prisma/client';
+import { formatDate } from '@/lib/format';
+import ProductBadge from '@/components/ProductBadge';
+import Image from "next/image";
 
 export const columns: MRT_ColumnDef<Product>[] = [
+    {
+        accessorKey: 'imageUrl',
+        header: 'Image',
+        enableColumnFilter: false,
+        enableSorting: false,
+        enableGlobalFilter: false,
+        Cell: ({ cell, row }) => {
+          return (
+            <Image
+                src={row.original.imageUrl}
+                alt={row.original.name}
+                width={150}
+                height={100}
+                className="rounded-lg"
+                priority
+            />
+          )
+        },
+    },
   {
     accessorKey: 'name',
     header: 'Title',
     size: 200,
     Cell: ({ cell, row }) => {
-      const isNew = Date.now() - new Date(row.original.createdAt).getTime() < 1000 * 60 * 60 * 24 * 7;
-      return (<span>{cell.getValue<string>()} {isNew && <div className="badge badge-secondary">NEW</div>}</span>)
+      return <ProductBadge productName={cell.getValue<string>()} publishedAt={row.original.createdAt} />
     },
   },
   {
@@ -55,11 +76,7 @@ export const columns: MRT_ColumnDef<Product>[] = [
       align: 'center',
     },
     Cell: ({ cell }) => {
-      const date = new Date(cell.getValue<string>()).toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric'
-      });
+      const date = formatDate(cell.getValue<string>());
       return (<span>{date}</span>);
     },
   },

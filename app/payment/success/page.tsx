@@ -1,6 +1,6 @@
-import NotFoundPage from "@/app/not-found";
 import { getServerSession } from "next-auth";
-import { options } from "prettier-plugin-tailwindcss";
+import { options } from "@/app/api/auth/[...nextauth]/options";
+import NotFoundPage from "@/app/not-found";
 
 export default async function PaymentSuccess({
   searchParams: { amount },
